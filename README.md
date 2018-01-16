@@ -1,5 +1,5 @@
 # Next-fetch
-Tiny (6.4kB, 0.7kB minified ! 🎉)Fetch wrapper using ES7 features such as async/await. 🐶  🎾
+Tiny (6.4kB, 0.7kB minified and gzip ! 🎉)Fetch wrapper using ES7 features such as async/await. 🐶  🎾
 
 # Features
 - Currently handles json only as a return value
