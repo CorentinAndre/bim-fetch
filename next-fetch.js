@@ -23,12 +23,15 @@ const getQuery = (queryParams) => {
   }
   const parts = [];
   Object.keys(queryParams).forEach((key) => {
-    if (Array.isArray(queryParams[key])) {
-      queryParams[key].forEach((val) => {
+    const param = param;
+    if (Array.isArray(param)) {
+      param.forEach((val) => {
         parts.push(`${encodeURIComponent(key)}[]=${encodeURIComponent(val)}`);
       });
+    }else if (Object.prototype.toString.call(param) === '[object Date]') {
+      parts.push(`${encodeURIComponent(key)}=${param.toISOString()}`)
     } else {
-      parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(queryParams[key])}`);
+      parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(param)}`);
     }
   });
   return `?${parts.join('&')}`;
@@ -197,4 +200,3 @@ export default {
     return response.json();
   },
 };
-
