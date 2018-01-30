@@ -23,15 +23,12 @@ const getQuery = (queryParams) => {
   }
   const parts = [];
   Object.keys(queryParams).forEach((key) => {
-    const param = param;
-    if (Array.isArray(param)) {
-      param.forEach((val) => {
+    if (Array.isArray(queryParams[key])) {
+      queryParams[key].forEach((val) => {
         parts.push(`${encodeURIComponent(key)}[]=${encodeURIComponent(val)}`);
       });
-    }else if (Object.prototype.toString.call(param) === '[object Date]') {
-      parts.push(`${encodeURIComponent(key)}=${param.toISOString()}`)
     } else {
-      parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(param)}`);
+      parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(queryParams[key])}`);
     }
   });
   return `?${parts.join('&')}`;
@@ -50,6 +47,62 @@ function getUrl(url, baseUrl) {
 }
 
 /**
+ * Determine and return the body type
+ * @param  {Blob || Object || String || URLSearchParams || FormData} bodyToTransform [description]
+ * @return {[type]}                 [description]
+ */
+function bodyParser(bodyToTransform) {
+  switch (bodyToTransform.constructor) {
+    case Blob:
+      return bodyToTransform;
+    case URLSearchParams:
+      return bodyToTransform;
+    case FormData:
+      return bodyToTransform;
+    case String:
+      return bodyToTransform;
+    default:
+      return JSON.stringify(bodyToTransform);
+  }
+}
+
+/**
+ * Custom error to handle body parsing error
+ * @extends Error
+ */
+class ResponseError extends Error {
+  constructor(response) {
+    super(`Couldn\t parse Content-Type: ${response.headers.get('Content-Type')}`);
+    this.name = 'ResponseError';
+  }
+}
+
+/**
+ * Parse response body depending on the Content-Type header.
+ * @param  {Response} response Response stream sent by the server
+ * @return {Promise}          Promise that will be resolved either as JSON (Object) / Text(String) / Blob or FormData
+ */
+function bodyResponseParser(response) {
+  const contentType = response.headers.get('Content-Type');
+  if (contentType.includes('application/json')) {
+    console.log('json');
+    return response.json();
+  } else if (contentType.includes('text/plain')) {
+    console.log('text');
+    return response.text();
+  } else if (contentType.includes('application/octet-stream')) {
+    console.log('blob');
+    return response.blob();
+  } else if (
+    contentType.includes('multipart/form-data')
+    || contentType.includes('application/x-www-form-encoded')) {
+    console.log('formdata');
+    return response.formData();
+  }
+  throw new ResponseError();
+}
+
+/**
  * Custom error to handle http errors
  * @extends Error
  */
@@ -57,7 +110,6 @@ class HttpError extends Error {
   constructor(response) {
     super(`${response.status} for ${response.url}`);
     this.name = 'HttpError';
-    this.response = response;
   }
 }
 
@@ -147,18 +199,19 @@ export default {
    * @param  {Object}  [headers={}] Custom headers
    * @return {Promise}              Return a promise of the result.
    */
-  async post(url, body = {}, headers = {}) {
+  async post(url, bodyToTransform = {}, headers = {}) {
+    const body = bodyParser(bodyToTransform);
     const response = await fetch(getUrl(url, this.baseUrl), {
       method: 'POST',
       headers: new Headers({
         ...this.baseHeaders,
         ...headers,
       }),
-      mode: this.mode,
       body,
+      mode: this.mode,
     });
     await this.validateStatus(response);
-    return response.json();
+    return bodyResponseParser(response);
   },
   /**
    * Perform a PUT request. Parameters are sent as an object.
