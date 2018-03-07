@@ -1,4 +1,4 @@
-# Next-fetch
+# Bim-fetch
 Tiny (8kB, 1kB minified and gzipped ! 🎉)Fetch wrapper using ES7 features such as async/await. 🐶  🎾
 
 # Features
