@@ -6,7 +6,7 @@ import uglify from 'rollup-plugin-uglify';
 import pkg from './package.json';
 
 export default {
-  input: 'src/next-fetch.js',
+  input: 'src/bim-fetch.js',
   output: [{
     file: pkg.main,
     format: 'cjs',
