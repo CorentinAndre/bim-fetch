@@ -1,3 +1,5 @@
+import 'whatwg-fetch';
+import 'babel-polyfill';
 /**
  * Used to determine if the request starts with http|https or not
  * @param  {String} str string to test
@@ -100,6 +102,11 @@ function bodyResponseParser(response) {
     return response.formData();
   }
   throw new ResponseError();
+
+  // FormData => multipart/form-data or application/x-www-form-encoded
+  // text => text/plain
+  // json => application/json
+  // blob => application/octet-stream
 }
 
 /**
@@ -107,8 +114,9 @@ function bodyResponseParser(response) {
  * @extends Error
  */
 class HttpError extends Error {
-  constructor(response) {
-    super(`${response.status} for ${response.url}`);
+  constructor(response, url, method) {
+    console.log(response);
+    super(`${response.error_code} when making a ${method} on ressource ${url}.\n ${response.display_message}`);
     this.name = 'HttpError';
   }
 }
@@ -144,10 +152,10 @@ export default {
    * @return {Promise}          Resolve if status is in range, throw an HttpError otherwise
    *                            (same as returning a Promise.reject())
    */
-  async validateStatus(response) {
+  async validateStatus(response, url, method) {
     if (response.status < 200 || response.status >= 310) {
       const data = await response.json();
-      throw new HttpError(data);
+      throw new HttpError(data, url, method);
     } else {
       return Promise.resolve();
     }
@@ -162,7 +170,7 @@ export default {
   setHeaders(newHeaders) {
     this.baseHeaders = {
       ...this.baseHeaders,
-      newHeaders,
+      ...newHeaders,
     };
   },
   /**
@@ -181,7 +189,8 @@ export default {
    * @return {Promise}              Return a promise of the result.
    */
   async get(url, params = {}, headers = {}) {
-    const response = await fetch(getUrl(url, this.baseUrl) + getQuery(params), {
+    const fullUrl = getUrl(url, this.baseUrl);
+    const response = await fetch(fullUrl + getQuery(params), {
       method: 'GET',
       headers: new Headers({
         ...this.baseHeaders,
@@ -189,8 +198,8 @@ export default {
       }),
       mode: this.mode,
     });
-    await this.validateStatus(response);
-    return response.json();
+    await this.validateStatus(response, fullUrl, 'GET');
+    return bodyResponseParser(response);
   },
   /**
    * Perform a POST request. Parameters are sent as an object.
@@ -201,7 +210,8 @@ export default {
    */
   async post(url, bodyToTransform = {}, headers = {}) {
     const body = bodyParser(bodyToTransform);
-    const response = await fetch(getUrl(url, this.baseUrl), {
+    const fullUrl = getUrl(url, this.baseUrl);
+    const response = await fetch(fullUrl, {
       method: 'POST',
       headers: new Headers({
         ...this.baseHeaders,
@@ -210,7 +220,7 @@ export default {
       body,
       mode: this.mode,
     });
-    await this.validateStatus(response);
+    await this.validateStatus(response, fullUrl, 'POST');
     return bodyResponseParser(response);
   },
   /**
@@ -221,7 +231,8 @@ export default {
    * @return {Promise}              Return a promise of the result.
    */
   async put(url, body, headers = {}) {
-    const response = await fetch(getUrl(url, this.baseUrl), {
+    const fullUrl = getUrl(url, this.baseUrl);
+    const response = await fetch(fullUrl, {
       method: 'PUT',
       headers: new Headers({
         ...this.baseHeaders,
@@ -230,8 +241,8 @@ export default {
       mode: this.mode,
       body,
     });
-    await this.validateStatus(response);
-    return response.json();
+    await this.validateStatus(response, fullUrl, 'PUT');
+    return bodyResponseParser(response);
   },
   /**
    * Perform a DELETE request. There should be no parameters to be sent.
@@ -241,7 +252,8 @@ export default {
    * @return {Promise}              Return a promise of the result.
    */
   async delete(url, headers = {}) {
-    const response = fetch(getUrl(url, this.baseUrl), {
+    const fullUrl = getUrl(url, this.baseUrl);
+    const response = await fetch(fullUrl, {
       method: 'DELETE',
       headers: new Headers({
         ...this.baseHeaders,
@@ -249,7 +261,6 @@ export default {
       }),
       mode: this.mode,
     });
-    await this.validateStatus(response);
-    return response.json();
+    return this.validateStatus(response, fullUrl, 'DELETE');
   },
 };

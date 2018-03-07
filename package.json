@@ -1,0 +1,44 @@
+{
+  "name": "bim-fetch",
+  "version": "1.0.0",
+  "description": "Yet another attempt at bringing an efficient and small fetch wrapper",
+  "main": "dist/next-fetch.js",
+  "module": "dist/next-fetch.es.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "npm run build",
+    "build": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CorentinAndre/next-fetch.git"
+  },
+  "keywords": [
+    "fetch",
+    "javascrip",
+    "es6",
+    "es7",
+    "async",
+    "await"
+  ],
+  "author": "Corentin André <corentin7andre8@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CorentinAndre/next-fetch/issues"
+  },
+  "homepage": "https://github.com/CorentinAndre/next-fetch#readme",
+  "devDependencies": {
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "rollup-plugin-babel": "^3.0.3",
+    "rollup-plugin-node-resolve": "^3.0.2",
+    "rollup-plugin-uglify": "^3.0.0",
+    "uglify-js": "^3.3.9"
+  },
+  "dependencies": {
+    "babel-core": "^6.26.0",
+    "whatwg-fetch": "^2.0.3"
+  }
+}
