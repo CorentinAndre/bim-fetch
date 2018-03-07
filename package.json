@@ -2,8 +2,8 @@
   "name": "bim-fetch",
   "version": "1.0.0",
   "description": "Yet another attempt at bringing an efficient and small fetch wrapper",
-  "main": "dist/next-fetch.js",
-  "module": "dist/next-fetch.es.js",
+  "main": "dist/bim-fetch.js",
+  "module": "dist/bim-fetch.es.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublish": "npm run build",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CorentinAndre/next-fetch.git"
+    "url": "git+https://github.com/CorentinAndre/bim-fetch.git"
   },
   "keywords": [
     "fetch",
@@ -24,9 +24,9 @@
   "author": "Corentin André <corentin7andre8@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/CorentinAndre/next-fetch/issues"
+    "url": "https://github.com/CorentinAndre/bim-fetch/issues"
   },
-  "homepage": "https://github.com/CorentinAndre/next-fetch#readme",
+  "homepage": "https://github.com/CorentinAndre/bim-fetch#readme",
   "devDependencies": {
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
