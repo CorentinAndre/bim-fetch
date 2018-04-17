@@ -230,7 +230,8 @@ export default {
    * @param  {Object}  [headers={}] Custom headers
    * @return {Promise}              Return a promise of the result.
    */
-  async put(url, body, headers = {}) {
+  async put(url, bodyToTransform, headers = {}) {
+    const body = bodyParser(bodyToTransform);
     const fullUrl = getUrl(url, this.baseUrl);
     const response = await fetch(fullUrl, {
       method: 'PUT',
