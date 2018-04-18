@@ -1,5 +1,5 @@
-import 'whatwg-fetch';
-import 'babel-polyfill';
+import "whatwg-fetch";
+import "babel-polyfill";
 /**
  * Used to determine if the request starts with http|https or not
  * @param  {String} str string to test
@@ -12,28 +12,30 @@ const startsWithHttps = str => /^https?:/.test(str);
  * @param  {String} str string to test
  * @return {Boolean}    true if it starts with /, false otherwise
  */
-const startsWithSlash = str => str.startsWith('/');
+const startsWithSlash = str => str.startsWith("/");
 
 /**
  * Transform object into query parameters
  * @param  {Object} queryParams Parameters of a GET request as an object
  * @return {String}             Query string representation of parameters
  */
-const getQuery = (queryParams) => {
+const getQuery = queryParams => {
   if (Object.keys(queryParams).length === 0) {
-    return '';
+    return "";
   }
   const parts = [];
-  Object.keys(queryParams).forEach((key) => {
+  Object.keys(queryParams).forEach(key => {
     if (Array.isArray(queryParams[key])) {
-      queryParams[key].forEach((val) => {
+      queryParams[key].forEach(val => {
         parts.push(`${encodeURIComponent(key)}[]=${encodeURIComponent(val)}`);
       });
     } else {
-      parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(queryParams[key])}`);
+      parts.push(
+        `${encodeURIComponent(key)}=${encodeURIComponent(queryParams[key])}`
+      );
     }
   });
-  return `?${parts.join('&')}`;
+  return `?${parts.join("&")}`;
 };
 
 /**
@@ -74,8 +76,10 @@ function bodyParser(bodyToTransform) {
  */
 class ResponseError extends Error {
   constructor(response) {
-    super(`Couldn\t parse Content-Type: ${response.headers.get('Content-Type')}`);
-    this.name = 'ResponseError';
+    super(
+      `Couldn\t parse Content-Type: ${response.headers.get("Content-Type")}`
+    );
+    this.name = "ResponseError";
   }
 }
 
@@ -85,20 +89,21 @@ class ResponseError extends Error {
  * @return {Promise}          Promise that will be resolved either as JSON (Object) / Text(String) / Blob or FormData
  */
 function bodyResponseParser(response) {
-  const contentType = response.headers.get('Content-Type');
-  if (contentType.includes('application/json')) {
-    console.log('json');
+  const contentType = response.headers.get("Content-Type");
+  if (contentType.includes("application/json")) {
+    console.log("json");
     return response.json();
-  } else if (contentType.includes('text/plain')) {
-    console.log('text');
+  } else if (contentType.includes("text/plain")) {
+    console.log("text");
     return response.text();
-  } else if (contentType.includes('application/octet-stream')) {
-    console.log('blob');
+  } else if (contentType.includes("application/octet-stream")) {
+    console.log("blob");
     return response.blob();
   } else if (
-    contentType.includes('multipart/form-data')
-    || contentType.includes('application/x-www-form-encoded')) {
-    console.log('formdata');
+    contentType.includes("multipart/form-data") ||
+    contentType.includes("application/x-www-form-encoded")
+  ) {
+    console.log("formdata");
     return response.formData();
   }
   throw new ResponseError();
@@ -116,9 +121,11 @@ function bodyResponseParser(response) {
 class HttpError extends Error {
   constructor(response, url, method) {
     console.log(response);
+    super(
+      `Error when making a ${method} on ressource ${url}.\nSee response property of the error to access server logs.`
+    );
     this.response = response;
-    super(`Error when making a ${method} on ressource ${url}.\nSee response property of the error to access server logs.`);
-    this.name = 'HttpError';
+    this.name = "HttpError";
   }
 }
 
@@ -128,14 +135,14 @@ export default {
    * @type {Object}
    */
   baseHeaders: {
-    'Content-Type': 'application/json',
-    Accept: 'application/json, text/plain, */*, multipart/form-data',
+    "Content-Type": "application/json",
+    Accept: "application/json, text/plain, */*, multipart/form-data"
   },
   /**
    * Default url used when accessing a ressource, if the request doens't start with https
    * @type {String}
    */
-  baseUrl: '',
+  baseUrl: "",
   /**
    * Mode used to fetch data. It can be either:
    * - cors
@@ -144,7 +151,7 @@ export default {
    * - navigate
    * @type {String}
    */
-  mode: 'cors',
+  mode: "cors",
 
   /**
    * Async function used to validate if the request is out of a defined range.
@@ -171,7 +178,7 @@ export default {
   setHeaders(newHeaders) {
     this.baseHeaders = {
       ...this.baseHeaders,
-      ...newHeaders,
+      ...newHeaders
     };
   },
   /**
@@ -192,14 +199,14 @@ export default {
   async get(url, params = {}, headers = {}) {
     const fullUrl = getUrl(url, this.baseUrl);
     const response = await fetch(fullUrl + getQuery(params), {
-      method: 'GET',
+      method: "GET",
       headers: new Headers({
         ...this.baseHeaders,
-        ...headers,
+        ...headers
       }),
-      mode: this.mode,
+      mode: this.mode
     });
-    await this.validateStatus(response, fullUrl, 'GET');
+    await this.validateStatus(response, fullUrl, "GET");
     return bodyResponseParser(response);
   },
   /**
@@ -213,15 +220,15 @@ export default {
     const body = bodyParser(bodyToTransform);
     const fullUrl = getUrl(url, this.baseUrl);
     const response = await fetch(fullUrl, {
-      method: 'POST',
+      method: "POST",
       headers: new Headers({
         ...this.baseHeaders,
-        ...headers,
+        ...headers
       }),
       body,
-      mode: this.mode,
+      mode: this.mode
     });
-    await this.validateStatus(response, fullUrl, 'POST');
+    await this.validateStatus(response, fullUrl, "POST");
     return bodyResponseParser(response);
   },
   /**
@@ -235,15 +242,15 @@ export default {
     const body = bodyParser(bodyToTransform);
     const fullUrl = getUrl(url, this.baseUrl);
     const response = await fetch(fullUrl, {
-      method: 'PUT',
+      method: "PUT",
       headers: new Headers({
         ...this.baseHeaders,
-        ...headers,
+        ...headers
       }),
       mode: this.mode,
-      body,
+      body
     });
-    await this.validateStatus(response, fullUrl, 'PUT');
+    await this.validateStatus(response, fullUrl, "PUT");
     return bodyResponseParser(response);
   },
   /**
@@ -256,13 +263,13 @@ export default {
   async delete(url, headers = {}) {
     const fullUrl = getUrl(url, this.baseUrl);
     const response = await fetch(fullUrl, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: new Headers({
         ...this.baseHeaders,
-        ...headers,
+        ...headers
       }),
-      mode: this.mode,
+      mode: this.mode
     });
-    return this.validateStatus(response, fullUrl, 'DELETE');
-  },
+    return this.validateStatus(response, fullUrl, "DELETE");
+  }
 };
