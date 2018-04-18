@@ -116,7 +116,8 @@ function bodyResponseParser(response) {
 class HttpError extends Error {
   constructor(response, url, method) {
     console.log(response);
-    super(`${response.error_code} when making a ${method} on ressource ${url}.\n ${response.display_message}`);
+    this.response = response;
+    super(`Error when making a ${method} on ressource ${url}.\nSee response property of the error to access server logs.`);
     this.name = 'HttpError';
   }
 }
