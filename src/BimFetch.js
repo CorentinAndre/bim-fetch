@@ -1,4 +1,5 @@
 import "whatwg-fetch";
+import "@babel/polyfill";
 import {
   getUrl,
   getQuery,
@@ -32,6 +33,10 @@ export default class BimFetch {
      */
     mode: "cors"
   };
+
+  constructor(url) {
+    this.setDefaultUrl(url);
+  }
 
   /**
    * Set headers on every request using rest operators.
