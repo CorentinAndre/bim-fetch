@@ -3,12 +3,11 @@
   "version": "1.0.4",
   "description": "Yet another attempt at bringing an efficient and small fetch wrapper",
   "main": "dist/bim-fetch.js",
-  "module": "dist/bim-fetch.es.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "lint": "eslint --quiet src/**",
     "prepublishOnly": "npm run build",
-    "build": "yarn rollup -c"
+    "build": "rollup -c"
   },
   "repository": {
     "type": "git",
@@ -29,13 +28,19 @@
   },
   "homepage": "https://github.com/CorentinAndre/bim-fetch#readme",
   "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-external-helpers": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.0.0",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/runtime": "^7.1.5",
     "@ornikar/eslint-config": "^5.2.0",
+    "@ornikar/jest-config": "^1.0.0",
+    "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
+    "babel-jest": "^23.4.2",
     "eslint": "^5.3.0",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-config-prettier": "^3.3.0",
@@ -44,16 +49,22 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-prettier": "^3.0.0",
     "eslint-plugin-unicorn": "^6.0.1",
+    "jest": "^23.6.0",
     "prettier": "^1.15.2",
     "prettier-eslint": "^8.8.2",
     "rollup": "^0.67.3",
-    "rollup-plugin-babel": "^3.0.3",
+    "rollup-plugin-babel": "^4.0.1",
     "rollup-plugin-node-resolve": "^3.0.2",
     "rollup-plugin-terser": "^3.0.0",
     "uglify-js": "^3.3.9"
   },
   "dependencies": {
-    "babel-core": "^6.26.0",
     "whatwg-fetch": "^2.0.3"
+  },
+  "jest": {
+    "preset": "@ornikar/jest-config",
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ]
   }
 }

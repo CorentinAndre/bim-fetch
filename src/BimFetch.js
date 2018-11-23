@@ -1,5 +1,4 @@
 import "whatwg-fetch";
-import "babel-polyfill";
 import {
   getUrl,
   getQuery,
@@ -9,11 +8,6 @@ import {
 } from "./utils";
 
 export default class BimFetch {
-  /**
-   * default Headers as an object, will be converted to Headers right before the request
-   * @type {Object}
-   */
-
   state = {
     /**
      * default Headers as an object, will be converted to Headers right before the request

@@ -1,11 +1,33 @@
 {
   "presets": [
-    ["env", {
-      "modules": false,
-      "targets": {
-        "browsers": ["last 2 versions", "ie>9"]
+    [
+      "@babel/preset-env",
+      {
+        "modules": false,
+        "targets": {
+          "browsers": [
+            "last 2 versions",
+            "ie>9"
+          ]
+        }
       }
-    }]
+    ]
   ],
-  "plugins": ["external-helpers", "transform-object-rest-spread", "babel-plugin-transform-class-properties"],
+  "plugins": [
+    [
+      "@babel/plugin-proposal-class-properties",
+      {
+        "spec": true
+      }
+    ]
+  ],
+  "env": {
+    "test": {
+      "presets": [
+        [
+          "@babel/preset-env"
+        ]
+      ]
+    }
+  }
 }
