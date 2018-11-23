@@ -1,0 +1,29 @@
+{   
+    "extends": ["@ornikar/eslint-config/babel", "prettier"],
+    "plugins": ["prettier"],
+    "env": {
+        "browser": true,
+        "node": true
+    },
+    "overrides": [
+        {
+            "files": ["src/*.js"],
+            "rules": {
+                "import/no-extraneous-dependencies": {
+                    "devDependencies": true
+                },
+                "max-lines": ["error", {
+                    "skipComments": true
+                }]
+            }
+        },
+        {
+            "files": ["rollup.config.js"],
+            "rules": {
+                "import/no-extraneous-dependencies": {
+                    "devDependencies": true
+                }
+            }
+        }
+    ]
+}
