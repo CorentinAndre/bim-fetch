@@ -1,6 +1,6 @@
 {
   "name": "bim-fetch",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Yet another attempt at bringing an efficient and small fetch wrapper",
   "main": "dist/bim-fetch.js",
   "scripts": {
@@ -73,10 +73,16 @@
     "collectCoverageFrom": [
       "src/**/*.ts"
     ],
-    "moduleFileExtensions": ["ts", "tsx", "js"],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
     "transform": {
       "^.+\\.(ts)$": "<rootDir>/test-preprocessor.config.js"
     },
-    "testMatch": ["**/*.test.(ts|tsx|js)"]
+    "testMatch": [
+      "**/*.test.(ts|tsx|js)"
+    ]
   }
 }
