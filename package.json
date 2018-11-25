@@ -1,6 +1,6 @@
 {
   "name": "bim-fetch",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "description": "Yet another attempt at bringing an efficient and small fetch wrapper",
   "main": "dist/bim-fetch.js",
   "scripts": {
