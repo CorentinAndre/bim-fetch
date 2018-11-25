@@ -71,7 +71,12 @@
   "jest": {
     "preset": "@ornikar/jest-config",
     "collectCoverageFrom": [
-      "src/**/*.js"
-    ]
+      "src/**/*.ts"
+    ],
+    "moduleFileExtensions": ["ts", "tsx", "js"],
+    "transform": {
+      "^.+\\.(ts)$": "<rootDir>/test-preprocessor.config.js"
+    },
+    "testMatch": ["**/*.test.(ts|tsx|js)"]
   }
 }

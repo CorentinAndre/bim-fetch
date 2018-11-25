@@ -26,6 +26,15 @@
             }
         },
         {
+            "files": ["test*.config.js"],
+            "rules": {
+                "import/no-extraneous-dependencies": {
+                    "devDependencies": true
+                },
+                "import/no-commonjs": "off"
+            }
+        },
+        {
             "files": [
                 "src/**/*.test.js"
             ],
