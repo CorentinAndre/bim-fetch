@@ -7,7 +7,9 @@
     "test": "jest",
     "lint": "eslint --quiet src/**",
     "prepublishOnly": "npm run build",
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "type-check": "tsc --noEmit",
+    "build:types": "tsc --emitDeclarationOnly"
   },
   "repository": {
     "type": "git",
@@ -35,6 +37,7 @@
     "@babel/plugin-transform-runtime": "^7.0.0",
     "@babel/polyfill": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
+    "@babel/preset-typescript": "^7.1.0",
     "@babel/runtime": "^7.1.5",
     "@ornikar/eslint-config": "^5.2.0",
     "@ornikar/jest-config": "^1.0.0",
@@ -56,9 +59,13 @@
     "rollup-plugin-babel": "^4.0.1",
     "rollup-plugin-node-resolve": "^3.0.2",
     "rollup-plugin-terser": "^3.0.0",
+    "rollup-plugin-typescript": "^1.0.0",
+    "tslib": "^1.9.3",
+    "typescript": "^3.1.6",
     "uglify-js": "^3.3.9"
   },
   "dependencies": {
+    "@types/whatwg-fetch": "^0.0.33",
     "whatwg-fetch": "^2.0.3"
   },
   "jest": {

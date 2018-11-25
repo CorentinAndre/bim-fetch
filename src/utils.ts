@@ -6,14 +6,14 @@ import HttpError from "./HttpError";
  * @param  {Object} queryParams Parameters of a GET request as an object
  * @return {String}             Query string representation of parameters
  */
-export const getQuery = queryParams => {
+export const getQuery = (queryParams: any) => {
   if (Object.keys(queryParams).length === 0) {
     return "";
   }
-  const parts = [];
+  const parts: string[] = [];
   Object.keys(queryParams).forEach(key => {
     if (Array.isArray(queryParams[key])) {
-      queryParams[key].forEach(val => {
+      queryParams[key].forEach((val: any) => {
         parts.push(`${encodeURIComponent(key)}[]=${encodeURIComponent(val)}`);
       });
     } else {
@@ -30,14 +30,14 @@ export const getQuery = queryParams => {
  * @param  {String} str string to test
  * @return {Boolean}    true if it starts with http|https, false otherwise
  */
-const startsWithHttps = str => /^https?:/.test(str);
+const startsWithHttps = (str: string): boolean => /^https?:/.test(str);
 
 /**
  * Used to determine if the request starts with a slash or not
  * @param  {String} str string to test
  * @return {Boolean}    true if it starts with /, false otherwise
  */
-const startsWithSlash = str => str.startsWith("/");
+const startsWithSlash = (str: string): boolean => str.startsWith("/");
 
 /**
  * Determine the request to be used
@@ -45,15 +45,33 @@ const startsWithSlash = str => str.startsWith("/");
  * @param  {String} baseUrl Base url
  * @return {String}         Url to be used for the fetch request
  */
-export const getUrl = (url, baseUrl) =>
+export const getUrl = (url: string, baseUrl: string): string =>
   startsWithHttps(url) || startsWithSlash(url) ? url : `${baseUrl}/${url}`;
 
 /**
  * Determine and return the body type
- * @param  {Blob || Object || String || URLSearchParams || FormData} bodyToTransform [description]
+ * @param  {Blob || Object || string || URLSearchParams || FormData} bodyToTransform [description]
  * @return {[type]}                 [description]
  */
-export const bodyParser = bodyToTransform => {
+export const bodyParser = (
+  bodyToTransform:
+    | string
+    | Blob
+    | URLSearchParams
+    | FormData
+    | ArrayBufferView
+    | ArrayBuffer
+    | ReadableStream
+):
+  | string
+  | Blob
+  | URLSearchParams
+  | FormData
+  | ArrayBufferView
+  | ArrayBuffer
+  | ReadableStream
+  | null
+  | undefined => {
   switch (bodyToTransform.constructor) {
     case Blob:
       return bodyToTransform;
@@ -73,8 +91,11 @@ export const bodyParser = bodyToTransform => {
  * @param  {Response} response Response stream sent by the server
  * @return {Promise}          Promise that will be resolved either as JSON (Object) / Text(String) / Blob or FormData
  */
-export const bodyResponseParser = response => {
+export const bodyResponseParser = (response: Response): Promise<any> => {
   const contentType = response.headers.get("Content-Type");
+  if (!contentType) {
+    throw new ResponseError(response);
+  }
   if (contentType.includes("application/json")) {
     console.log("json");
     return response.json();
@@ -94,12 +115,7 @@ export const bodyResponseParser = response => {
     console.log("formdata");
     return response.formData();
   }
-  throw new ResponseError();
-
-  // FormData => multipart/form-data or application/x-www-form-encoded
-  // text => text/plain
-  // json => application/json
-  // blob => application/octet-stream
+  throw new ResponseError(response);
 };
 
 /**
@@ -109,7 +125,11 @@ export const bodyResponseParser = response => {
  * @return {Promise}          Resolve if status is in range, throw an HttpError otherwise
  *                            (same as returning a Promise.reject())
  */
-export const validateStatus = async (response, url, method) => {
+export const validateStatus = async (
+  response: Response,
+  url: string,
+  method: string
+) => {
   if (response.status < 200 || response.status >= 310) {
     const data = await response.json();
     throw new HttpError(data, url, method);

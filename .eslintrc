@@ -7,7 +7,7 @@
     },
     "overrides": [
         {
-            "files": ["src/*.js"],
+            "files": ["src/*.ts"],
             "rules": {
                 "import/no-extraneous-dependencies": {
                     "devDependencies": true

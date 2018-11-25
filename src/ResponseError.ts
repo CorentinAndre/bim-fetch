@@ -5,7 +5,7 @@
  * @extends Error
  */
 export default class ResponseError extends Error {
-  constructor(response) {
+  constructor(response: Response) {
     super(
       `Couldn\t parse Content-Type: ${response.headers.get("Content-Type")}`
     );

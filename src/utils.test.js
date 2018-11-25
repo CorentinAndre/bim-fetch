@@ -1,4 +1,4 @@
-import { getQuery, getUrl } from "./utils";
+import { getQuery, getUrl } from "./utils.ts";
 
 const queries = [
   {

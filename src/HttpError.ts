@@ -5,7 +5,8 @@
  * @extends Error
  */
 export default class HttpError extends Error {
-  constructor(response, url, method) {
+  response: Response;
+  constructor(response: Response, url: string, method: string) {
     console.log(response);
     super(
       `Error when making a ${method} on ressource ${url}.\nSee response property of the error to access server logs.`

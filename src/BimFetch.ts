@@ -34,7 +34,7 @@ export default class BimFetch {
     mode: "cors"
   };
 
-  constructor(url) {
+  constructor(url: string) {
     this.setDefaultUrl(url);
   }
 
@@ -44,7 +44,7 @@ export default class BimFetch {
    * Thanks to rest operators, newHeaders will overwrite old headers values.
    * @param  {Object}  newHeaders Custom headers to be used for the current request
    */
-  setHeaders(newHeaders) {
+  setHeaders(newHeaders: Object) {
     this.state.baseHeaders = {
       ...this.state.baseHeaders,
       ...newHeaders
@@ -55,19 +55,15 @@ export default class BimFetch {
    * Set default url to be used when making fetch requests
    * @param {string} url Default url to be used (https://my-great-api.com)
    */
-  setDefaultUrl(url) {
+  setDefaultUrl(url: string) {
     this.state.baseUrl = url;
   }
 
   /**
    * Perform a GET request. Parameters are sent as an object and will be parsed and transformed
    * into a valid query
-   * @param  {String}  url          Relative or absolute URL of the request
-   * @param  {Object}  [params={}]  Parameters to send with the request
-   * @param  {Object}  [headers={}] Custom headers
-   * @return {Promise}              Return a promise of the result.
    */
-  async get(url, params = {}, headers = {}) {
+  async get(url: string, params = {}, headers = {}) {
     const fullUrl = getUrl(url, this.state.baseUrl);
     const response = await fetch(fullUrl + getQuery(params), {
       method: "GET",
@@ -75,7 +71,6 @@ export default class BimFetch {
         ...this.state.baseHeaders,
         ...headers
       }),
-      mode: this.state.mode
     });
     await validateStatus(response, fullUrl, "GET");
     return bodyResponseParser(response);
@@ -88,7 +83,7 @@ export default class BimFetch {
    * @param  {Object}  [headers={}] Custom headers
    * @return {Promise}              Return a promise of the result.
    */
-  async post(url, bodyToTransform = {}, headers = {}) {
+  async post(url: string, bodyToTransform?: any, headers = {}) {
     const body = bodyParser(bodyToTransform);
     const fullUrl = getUrl(url, this.state.baseUrl);
     const response = await fetch(fullUrl, {
@@ -98,7 +93,6 @@ export default class BimFetch {
         ...headers
       }),
       body,
-      mode: this.state.mode
     });
     await validateStatus(response, fullUrl, "POST");
     return bodyResponseParser(response);
@@ -111,7 +105,7 @@ export default class BimFetch {
    * @param  {Object}  [headers={}] Custom headers
    * @return {Promise}              Return a promise of the result.
    */
-  async put(url, bodyToTransform, headers = {}) {
+  async put(url: string, bodyToTransform: any, headers = {}) {
     const body = bodyParser(bodyToTransform);
     const fullUrl = getUrl(url, this.state.baseUrl);
     const response = await fetch(fullUrl, {
@@ -120,7 +114,6 @@ export default class BimFetch {
         ...this.state.baseHeaders,
         ...headers
       }),
-      mode: this.state.mode,
       body
     });
     await validateStatus(response, fullUrl, "PUT");
@@ -134,7 +127,7 @@ export default class BimFetch {
    * @param  {Object}  [headers={}] Custom headers
    * @return {Promise}              Return a promise of the result.
    */
-  async delete(url, headers = {}) {
+  async delete(url: string, headers = {}) {
     const fullUrl = getUrl(url, this.state.baseUrl);
     const response = await fetch(fullUrl, {
       method: "DELETE",
@@ -142,7 +135,6 @@ export default class BimFetch {
         ...this.state.baseHeaders,
         ...headers
       }),
-      mode: this.state.mode
     });
     return validateStatus(response, fullUrl, "DELETE");
   }
