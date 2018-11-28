@@ -8,8 +8,17 @@ import {
   bodyResponseParser
 } from "./utils";
 
+export interface Headers {
+  [key: string]: string;
+}
+
+export interface State {
+  baseHeaders: Headers;
+  baseUrl: string;
+}
+
 export default class BimFetch {
-  state = {
+  state: State = {
     /**
      * default Headers as an object, will be converted to Headers right before the request
      * @type {Object}
@@ -22,16 +31,7 @@ export default class BimFetch {
      * Default url used when accessing a ressource, if the request doens't start with https
      * @type {String}
      */
-    baseUrl: "",
-    /**
-     * Mode used to fetch data. It can be either:
-     * - cors
-     * - same-origin
-     * - no-cors
-     * - navigate
-     * @type {String}
-     */
-    mode: "cors"
+    baseUrl: ""
   };
 
   constructor(url: string) {
@@ -44,7 +44,7 @@ export default class BimFetch {
    * Thanks to rest operators, newHeaders will overwrite old headers values.
    * @param  {Object}  newHeaders Custom headers to be used for the current request
    */
-  setHeaders(newHeaders: Object) {
+  setHeaders(newHeaders: Headers): void {
     this.state.baseHeaders = {
       ...this.state.baseHeaders,
       ...newHeaders
@@ -53,9 +53,8 @@ export default class BimFetch {
 
   /**
    * Set default url to be used when making fetch requests
-   * @param {string} url Default url to be used (https://my-great-api.com)
    */
-  setDefaultUrl(url: string) {
+  setDefaultUrl(url: string): void {
     this.state.baseUrl = url;
   }
 
@@ -63,14 +62,14 @@ export default class BimFetch {
    * Perform a GET request. Parameters are sent as an object and will be parsed and transformed
    * into a valid query
    */
-  async get(url: string, params = {}, headers = {}) {
+  async get(url: string, params?: any, headers?: Headers): Promise<any> {
     const fullUrl = getUrl(url, this.state.baseUrl);
     const response = await fetch(fullUrl + getQuery(params), {
       method: "GET",
       headers: new Headers({
         ...this.state.baseHeaders,
         ...headers
-      }),
+      })
     });
     await validateStatus(response, fullUrl, "GET");
     return bodyResponseParser(response);
@@ -83,7 +82,11 @@ export default class BimFetch {
    * @param  {Object}  [headers={}] Custom headers
    * @return {Promise}              Return a promise of the result.
    */
-  async post(url: string, bodyToTransform?: any, headers = {}) {
+  async post(
+    url: string,
+    bodyToTransform?: any,
+    headers?: Headers
+  ): Promise<any> {
     const body = bodyParser(bodyToTransform);
     const fullUrl = getUrl(url, this.state.baseUrl);
     const response = await fetch(fullUrl, {
@@ -92,7 +95,7 @@ export default class BimFetch {
         ...this.state.baseHeaders,
         ...headers
       }),
-      body,
+      body
     });
     await validateStatus(response, fullUrl, "POST");
     return bodyResponseParser(response);
@@ -105,7 +108,11 @@ export default class BimFetch {
    * @param  {Object}  [headers={}] Custom headers
    * @return {Promise}              Return a promise of the result.
    */
-  async put(url: string, bodyToTransform: any, headers = {}) {
+  async put(
+    url: string,
+    bodyToTransform?: any,
+    headers?: Headers
+  ): Promise<any> {
     const body = bodyParser(bodyToTransform);
     const fullUrl = getUrl(url, this.state.baseUrl);
     const response = await fetch(fullUrl, {
@@ -127,14 +134,14 @@ export default class BimFetch {
    * @param  {Object}  [headers={}] Custom headers
    * @return {Promise}              Return a promise of the result.
    */
-  async delete(url: string, headers = {}) {
+  async delete(url: string, headers?: Headers): Promise<any> {
     const fullUrl = getUrl(url, this.state.baseUrl);
     const response = await fetch(fullUrl, {
       method: "DELETE",
       headers: new Headers({
         ...this.state.baseHeaders,
         ...headers
-      }),
+      })
     });
     return validateStatus(response, fullUrl, "DELETE");
   }

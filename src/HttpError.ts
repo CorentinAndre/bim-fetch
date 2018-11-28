@@ -6,6 +6,7 @@
  */
 export default class HttpError extends Error {
   response: Response;
+
   constructor(response: Response, url: string, method: string) {
     console.log(response);
     super(
