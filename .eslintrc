@@ -1,5 +1,14 @@
 {   
     "extends": ["@ornikar/eslint-config/babel", "prettier"],
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "extensions": [
+                    ".ts"
+                ]
+            }
+        }
+    },
     "plugins": ["prettier"],
     "env": {
         "browser": true,
@@ -36,7 +45,7 @@
         },
         {
             "files": [
-                "src/**/*.test.js"
+                "src/**/*.test.ts"
             ],
             "env": {
                 "jest": true
