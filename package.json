@@ -2,14 +2,15 @@
   "name": "bim-fetch",
   "version": "3.0.1",
   "description": "Yet another attempt at bringing an efficient and small fetch wrapper",
-  "main": "dist/bim-fetch.js",
-  "types": "./lib/BimFetch.d.ts",
+  "main": "dist/BimFetch.js",
+  "types": "dist/BimFetch.d.ts",
   "scripts": {
     "test": "jest",
     "lint": "eslint --quiet src/**",
     "prepublishOnly": "npm run build",
-    "build": "rollup -c",
+    "build": "rimraf dist && yarn build:bundle && yarn build:types",
     "type-check": "tsc --noEmit",
+    "build:bundle": "rollup -c",
     "build:types": "tsc --emitDeclarationOnly"
   },
   "repository": {
@@ -56,6 +57,7 @@
     "jest": "^23.6.0",
     "prettier": "^1.15.2",
     "prettier-eslint": "^8.8.2",
+    "rimraf": "^2.6.2",
     "rollup": "^0.67.3",
     "rollup-plugin-babel": "^4.0.1",
     "rollup-plugin-node-resolve": "^3.0.2",
@@ -66,7 +68,7 @@
     "uglify-js": "^3.3.9"
   },
   "dependencies": {
-    "@types/whatwg-fetch": "^0.0.33",
+    "@types/jest": "^23.3.9",
     "whatwg-fetch": "^2.0.3"
   },
   "jest": {
